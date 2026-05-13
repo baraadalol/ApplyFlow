@@ -12,10 +12,12 @@ export default function AddCompanyForm() {
   const [tags, setTags] = useState("");
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
+    setSuccess(true);
 
 const res = await fetch("/api/companies", {
   method: "POST",
@@ -45,76 +47,133 @@ if (!res.ok) {
     router.refresh();
   }
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        border: "1px solid #e5e7eb",
-        borderRadius: "16px",
-        padding: "24px",
-        backgroundColor: "white",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
-      }}
-    >
-      <h2 style={{ marginTop: 0, marginBottom: "16px" }}>Add Company</h2>
+ return (
+  <form
+    onSubmit={handleSubmit}
+    style={{
+      border: "1px solid #e5e7eb",
+      borderRadius: "16px",
+      padding: "24px",
+      backgroundColor: "white",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+    }}
+  >
+    <h2 style={{ marginTop: 0, marginBottom: "16px" }}>
+      Add Company
+    </h2>
 
-      <div style={{ display: "grid", gap: "12px" }}>
-        <input
-          type="text"
-          placeholder="Company name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #d1d5db" }}
-        />
+    <div style={{ display: "grid", gap: "12px" }}>
+      <input
+        type="text"
+        placeholder="Company name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+        style={{
+          width: "100%",
+          padding: "12px",
+          borderRadius: "8px",
+          border: "1px solid #d1d5db",
+        }}
+      />
 
-        <input
-          type="text"
-          placeholder="Website"
-          value={website}
-          onChange={(e) => setWebsite(e.target.value)}
-          style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #d1d5db" }}
-        />
+      <input
+        type="text"
+        placeholder="Website"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "12px",
+          borderRadius: "8px",
+          border: "1px solid #d1d5db",
+        }}
+      />
 
-        <input
-          type="text"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #d1d5db" }}
-        />
+      <input
+        type="text"
+        placeholder="Location"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "12px",
+          borderRadius: "8px",
+          border: "1px solid #d1d5db",
+        }}
+      />
 
-        <input
-          type="text"
-          placeholder="Tags (comma separated)"
-          value={tags}
-          onChange={(e) => setTags(e.target.value)}
-          style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #d1d5db" }}
-        />
+      <input
+        type="text"
+        placeholder="Tags (comma separated)"
+        value={tags}
+        onChange={(e) => setTags(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "12px",
+          borderRadius: "8px",
+          border: "1px solid #d1d5db",
+        }}
+      />
 
-        <textarea
-          placeholder="Notes"
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #d1d5db", minHeight: "100px" }}
-        />
+      <textarea
+        placeholder="Notes"
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "12px",
+          borderRadius: "8px",
+          border: "1px solid #d1d5db",
+          minHeight: "100px",
+        }}
+      />
 
-        <button
-          type="submit"
-          disabled={saving}
+      <button
+        type="submit"
+        disabled={saving}
+        style={{
+          backgroundColor: "#111827",
+          color: "white",
+          border: "none",
+          padding: "12px 16px",
+          borderRadius: "8px",
+          cursor: "pointer",
+          fontWeight: 600,
+        }}
+      >
+        {saving ? "Saving..." : "Add company"}
+      </button>
+
+      {success && (
+        <div
           style={{
-            backgroundColor: "#111827",
-            color: "white",
-            border: "none",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: 600,
+            marginTop: "14px",
+            padding: "14px",
+            borderRadius: "12px",
+            background: "#eef2ff",
+            color: "#3730a3",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "12px",
           }}
         >
-          {saving ? "Saving..." : "Add company"}
-        </button>
-      </div>
-    </form>
-  );
+          <span>Company added successfully.</span>
+
+          <a
+            href="/dashboard"
+            style={{
+              fontWeight: 700,
+              color: "#3730a3",
+              textDecoration: "none",
+            }}
+          >
+            Go to dashboard
+          </a>
+        </div>
+      )}
+    </div>
+  </form>
+);
 }

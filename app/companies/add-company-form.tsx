@@ -17,20 +17,25 @@ export default function AddCompanyForm() {
     e.preventDefault();
     setSaving(true);
 
-    await fetch("/api/companies", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        website,
-        location,
-        tags,
-        notes,
-      }),
-    });
+const res = await fetch("/api/companies", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    name,
+    website,
+    location,
+    tags,
+    notes,
+  }),
+});
 
+if (!res.ok) {
+  alert("Could not add company");
+  setSaving(false);
+  return;
+}
     setName("");
     setWebsite("");
     setLocation("");

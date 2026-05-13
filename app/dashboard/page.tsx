@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const dynamic = "force-dynamic";
 
 async function getData() {
@@ -12,6 +14,19 @@ async function getData() {
   return res.json();
 }
 
+function formatDate(dateStr: string | null) {
+  if (!dateStr) return "No follow-up date";
+
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return "Invalid date";
+
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 function getBucket(dateStr: string | null) {
   if (!dateStr) return "none";
 
@@ -21,8 +36,7 @@ function getBucket(dateStr: string | null) {
   const date = new Date(dateStr);
   date.setHours(0, 0, 0, 0);
 
-  const diff =
-    (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
+  const diff = (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
 
   if (diff < 0) return "overdue";
   if (diff === 0) return "today";
@@ -30,27 +44,8 @@ function getBucket(dateStr: string | null) {
   return "later";
 }
 
-function getStatusColor(status: string) {
-  switch (status) {
-    case "not_contacted":
-      return "#6b7280";
-    case "contacted":
-      return "#2563eb";
-    case "replied":
-      return "#7c3aed";
-    case "interview":
-      return "#f59e0b";
-    case "offer":
-      return "#16a34a";
-    case "accepted":
-      return "#15803d";
-    case "rejected":
-      return "#dc2626";
-    case "ghosted":
-      return "#9ca3af";
-    default:
-      return "#111827";
-  }
+function formatStatus(status: string) {
+  return status ? status.replaceAll("_", " ") : "No status";
 }
 
 export default async function DashboardPage() {
@@ -63,130 +58,115 @@ export default async function DashboardPage() {
   return (
     <main
       style={{
-        padding: "32px",
-        maxWidth: "1100px",
-        margin: "0 auto",
-        backgroundColor: "#f8fafc",
         minHeight: "100vh",
+        background: "#f8fafc",
+        padding: "40px 24px",
+        fontFamily: "Arial, sans-serif",
       }}
     >
-      <h1 style={{ fontSize: "40px", marginBottom: "24px" }}>Dashboard</h1>
+      <section style={{ maxWidth: "1100px", margin: "0 auto" }}>
+        <nav style={{ display: "flex", justifyContent: "space-between", marginBottom: "32px" }}>
+          <Link href="/" style={{ textDecoration: "none", color: "#111827", fontWeight: 800 }}>
+            ApplyFlow
+          </Link>
 
-      <div
-        style={{
-          display: "grid",
-          gap: "24px",
-        }}
-      >
-        <Section
-          title="🔴 Overdue"
-          subtitle={`${overdue.length} item${overdue.length === 1 ? "" : "s"}`}
-          items={overdue}
-          getStatusColor={getStatusColor}
-        />
+          <div style={{ display: "flex", gap: "16px" }}>
+            <Link href="/companies" style={{ color: "#374151", textDecoration: "none" }}>
+              Companies
+            </Link>
+          </div>
+        </nav>
 
-        <Section
-          title="🟡 Today"
-          subtitle={`${today.length} item${today.length === 1 ? "" : "s"}`}
-          items={today}
-          getStatusColor={getStatusColor}
-        />
+        <h1 style={{ fontSize: "44px", marginBottom: "8px", color: "#111827" }}>
+          Dashboard
+        </h1>
 
-        <Section
-          title="🟢 Next 7 Days"
-          subtitle={`${next.length} item${next.length === 1 ? "" : "s"}`}
-          items={next}
-          getStatusColor={getStatusColor}
-        />
-      </div>
+        <p style={{ color: "#6b7280", marginBottom: "28px", fontSize: "18px" }}>
+          Follow-ups grouped by when you need to act.
+        </p>
+
+        <div style={{ display: "grid", gap: "20px" }}>
+          <Section title="Overdue" items={overdue} />
+          <Section title="Today" items={today} />
+          <Section title="Next 7 days" items={next} />
+        </div>
+      </section>
     </main>
   );
 }
 
-function Section({
-  title,
-  subtitle,
-  items,
-  getStatusColor,
-}: {
-  title: string;
-  subtitle: string;
-  items: any[];
-  getStatusColor: (status: string) => string;
-}) {
+function Section({ title, items }: { title: string; items: any[] }) {
   return (
     <section
       style={{
+        background: "white",
         border: "1px solid #e5e7eb",
-        borderRadius: "16px",
-        padding: "20px",
-        backgroundColor: "white",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+        borderRadius: "20px",
+        padding: "24px",
+        boxShadow: "0 12px 30px rgba(15, 23, 42, 0.06)",
       }}
     >
-      {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "16px",
-        }}
-      >
-        <h2 style={{ margin: 0 }}>{title}</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "18px" }}>
+        <h2 style={{ margin: 0, color: "#111827" }}>{title}</h2>
 
         <span
           style={{
-            background: "#111827",
-            color: "white",
-            padding: "4px 10px",
+            background: "#eef2ff",
+            color: "#3730a3",
+            padding: "6px 12px",
             borderRadius: "999px",
-            fontSize: "12px",
+            fontSize: "14px",
+            fontWeight: 700,
           }}
         >
-          {subtitle}
+          {items.length} {items.length === 1 ? "item" : "items"}
         </span>
       </div>
 
-      {/* Empty state */}
       {items.length === 0 ? (
-        <p style={{ color: "#6b7280" }}>Nothing here 🎉</p>
+        <p style={{ color: "#6b7280", margin: 0 }}>Nothing planned here.</p>
       ) : (
         <div style={{ display: "grid", gap: "12px" }}>
           {items.map((c) => (
-            <div
+            <details
               key={c.id}
               style={{
                 border: "1px solid #e5e7eb",
-                borderRadius: "12px",
-                padding: "14px",
-                background: "#fafafa",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
+                borderRadius: "14px",
+                padding: "16px",
+                background: "#f9fafb",
               }}
             >
-              <div>
-                <h3 style={{ margin: 0 }}>{c.name}</h3>
-
-                <p style={{ margin: "4px 0", fontSize: "14px", color: "#6b7280" }}>
-                  {c.next_followup_at ?? "No date"}
-                </p>
-              </div>
-
-              <span
+              <summary
                 style={{
-                  backgroundColor: "#f3f4f6",
-                  color: getStatusColor(c.status),
-                  padding: "6px 10px",
-                  borderRadius: "999px",
-                  fontSize: "12px",
-                  fontWeight: 600,
+                  cursor: "pointer",
+                  fontWeight: 800,
+                  color: "#111827",
                 }}
               >
-                {c.status}
-              </span>
-            </div>
+                {c.name} — {formatDate(c.next_followup_at)}
+              </summary>
+
+              <div style={{ marginTop: "14px", color: "#4b5563", display: "grid", gap: "8px" }}>
+                <p><strong>Status:</strong> {formatStatus(c.status)}</p>
+                <p><strong>Priority:</strong> {c.priority ?? "-"}</p>
+                <p><strong>Contact person:</strong> {c.contact_person || "Not added"}</p>
+                <p><strong>Contact channel:</strong> {c.contact_channel || "Not added"}</p>
+                <p><strong>Notes:</strong> {c.notes || "No notes"}</p>
+
+                <Link
+                  href={`/companies/${c.id}`}
+                  style={{
+                    marginTop: "8px",
+                    color: "#3730a3",
+                    fontWeight: 700,
+                    textDecoration: "none",
+                  }}
+                >
+                  Open company details
+                </Link>
+              </div>
+            </details>
           ))}
         </div>
       )}

@@ -54,6 +54,7 @@ export default async function DashboardPage() {
   const overdue = data.filter((c: any) => getBucket(c.next_followup_at) === "overdue");
   const today = data.filter((c: any) => getBucket(c.next_followup_at) === "today");
   const next = data.filter((c: any) => getBucket(c.next_followup_at) === "next");
+  const later = data.filter((c: any) => getBucket(c.next_followup_at) === "later");  
 
   return (
     <main
@@ -89,6 +90,7 @@ export default async function DashboardPage() {
           <Section title="Overdue" items={overdue} />
           <Section title="Today" items={today} />
           <Section title="Next 7 days" items={next} />
+          <Section title="Later" items={later} />
         </div>
       </section>
     </main>

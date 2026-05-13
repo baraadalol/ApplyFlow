@@ -77,8 +77,8 @@ export default function HomePage() {
               marginBottom: "32px",
             }}
           >
-            ApplyFlow helps DevOps students organize LIA applications, contact
-            history, priorities and next follow-up dates in one simple place.
+           ApplyFlow helps students organize LIA applications, contact history,
+           priorities and next follow-up dates in one simple place.
           </p>
 
           <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
@@ -122,7 +122,7 @@ export default function HomePage() {
           {[
             ["Track companies", "Save companies, websites, locations and notes."],
             ["Follow up", "See when you should contact a company again."],
-            ["DevOps ready", "Built with Next.js, Docker, CI/CD and Kubernetes."],
+            ["Made for LIA search", "Created to make internship applications easier to follow."],
           ].map(([title, text]) => (
             <div
               key={title}

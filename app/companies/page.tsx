@@ -259,30 +259,70 @@ export default async function CompaniesPage() {
                     <div
                       style={{
                         display: "grid",
-                        gap: "12px",
-                        marginBottom: "16px",
+                        gridTemplateColumns:
+                          "repeat(auto-fit, minmax(220px, 1fr))",
+                        gap: "16px",
+                        marginTop: "24px",
+                        alignItems: "end",
                       }}
                     >
-                      <StatusSelect
-                        applicationId={c.application_id}
-                        currentStatus={c.status}
-                      />
+                      <div
+                        style={{
+                          background: "#f8fafc",
+                          padding: "14px",
+                          borderRadius: "14px",
+                          border: "1px solid #e5e7eb",
+                        }}
+                      >
+                        <StatusSelect
+                          applicationId={c.application_id}
+                          currentStatus={c.status}
+                        />
+                      </div>
 
-                      <DatePicker
-                        applicationId={c.application_id}
-                        currentDate={c.next_followup_at}
-                      />
+                      <div
+                        style={{
+                          background: "#f8fafc",
+                          padding: "14px",
+                          borderRadius: "14px",
+                          border: "1px solid #e5e7eb",
+                        }}
+                      >
+                        <DatePicker
+                          applicationId={c.application_id}
+                          currentDate={c.next_followup_at}
+                        />
+                      </div>
 
-                      <PrioritySelect
-                        applicationId={c.application_id}
-                        currentPriority={c.priority}
-                      />
+                      <div
+                        style={{
+                          background: "#f8fafc",
+                          padding: "14px",
+                          borderRadius: "14px",
+                          border: "1px solid #e5e7eb",
+                        }}
+                      >
+                        <PrioritySelect
+                          applicationId={c.application_id}
+                          currentPriority={c.priority}
+                        />
+                      </div>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "end",
+                        }}
+                      >
+                        <DeleteCompanyButton
+                          companyId={c.id}
+                          companyName={c.name}
+                        />
+                      </div>
                     </div>
                   ) : (
                     <p>No application yet.</p>
                   )}
-
-                  <DeleteCompanyButton companyId={c.id} companyName={c.name} />
                 </article>
               );
             })

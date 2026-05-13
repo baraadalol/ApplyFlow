@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function HomePage() {
   return (
     <main>
@@ -6,11 +8,11 @@ export default function HomePage() {
 
       <ul>
         <li>
-          <a href="/dashboard">Dashboard</a>
+          <Link href="/dashboard">Dashboard</Link>
         </li>
 
         <li>
-          <a href="/companies">Companies</a>
+          <Link href="/companies">Companies</Link>
         </li>
       </ul>
     </main>

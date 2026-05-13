@@ -32,12 +32,13 @@ function formatDate(dateStr: string | null) {
   });
 }
 
-function formatStatus(status: string) {
+function formatStatus(status: string | null) {
   return status ? status.replaceAll("_", " ") : "No status";
 }
 
 function tagList(tags: string | null) {
   if (!tags) return [];
+
   return tags
     .split(",")
     .map((tag) => tag.trim())
@@ -66,22 +67,36 @@ export default async function CompaniesPage() {
         >
           <Link
             href="/"
-            style={{ textDecoration: "none", color: "#111827", fontWeight: 800 }}
+            style={{
+              textDecoration: "none",
+              color: "#111827",
+              fontWeight: 800,
+            }}
           >
             ApplyFlow
           </Link>
 
           <div style={{ display: "flex", gap: "16px" }}>
-            <Link href="/dashboard" style={{ color: "#374151", textDecoration: "none" }}>
+            <Link
+              href="/dashboard"
+              style={{ color: "#374151", textDecoration: "none" }}
+            >
               Dashboard
             </Link>
           </div>
         </nav>
 
         <div style={{ marginBottom: "28px" }}>
-          <h1 style={{ fontSize: "44px", margin: "0 0 8px", color: "#111827" }}>
+          <h1
+            style={{
+              fontSize: "44px",
+              margin: "0 0 8px",
+              color: "#111827",
+            }}
+          >
             Companies
           </h1>
+
           <p style={{ color: "#6b7280", fontSize: "18px", margin: 0 }}>
             Add companies, track applications and keep your LIA search organized.
           </p>
@@ -113,7 +128,7 @@ export default async function CompaniesPage() {
                     background: "white",
                     border: "1px solid #e5e7eb",
                     borderRadius: "20px",
-                    padding: "24px",
+                    padding: "28px",
                     boxShadow: "0 12px 30px rgba(15, 23, 42, 0.06)",
                   }}
                 >
@@ -127,7 +142,14 @@ export default async function CompaniesPage() {
                     }}
                   >
                     <div>
-                      <h2 style={{ margin: "0 0 6px", color: "#111827" }}>
+                      <h2
+                        style={{
+                          marginTop: 0,
+                          marginBottom: "8px",
+                          fontSize: "32px",
+                          color: "#111827",
+                        }}
+                      >
                         <Link
                           href={`/companies/${c.id}`}
                           style={{ textDecoration: "none", color: "inherit" }}
@@ -136,10 +158,18 @@ export default async function CompaniesPage() {
                         </Link>
                       </h2>
 
-                      <p style={{ margin: 0, color: "#6b7280" }}>
-                        {c.location || "No location added"}
-                        {c.website ? ` · ${c.website}` : ""}
-                      </p>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "10px",
+                          flexWrap: "wrap",
+                          marginBottom: "18px",
+                          color: "#6b7280",
+                        }}
+                      >
+                        {c.location && <span>{c.location}</span>}
+                        {c.website && <span>• {c.website}</span>}
+                      </div>
                     </div>
 
                     <span
@@ -163,7 +193,7 @@ export default async function CompaniesPage() {
                         display: "flex",
                         gap: "8px",
                         flexWrap: "wrap",
-                        marginBottom: "14px",
+                        marginBottom: "18px",
                       }}
                     >
                       {tags.map((tag) => (
@@ -187,7 +217,8 @@ export default async function CompaniesPage() {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                      gridTemplateColumns:
+                        "repeat(auto-fit, minmax(180px, 1fr))",
                       gap: "12px",
                       marginBottom: "16px",
                       color: "#4b5563",
@@ -196,11 +227,15 @@ export default async function CompaniesPage() {
                     <p>
                       <strong>Priority:</strong> {c.priority ?? "-"}
                     </p>
+
                     <p>
-                      <strong>Next follow-up:</strong> {formatDate(c.next_followup_at)}
+                      <strong>Next follow-up:</strong>{" "}
+                      {formatDate(c.next_followup_at)}
                     </p>
+
                     <p>
-                      <strong>Contact:</strong> {c.contact_person || "Not added"}
+                      <strong>Contact:</strong>{" "}
+                      {c.contact_person || "Not added"}
                     </p>
                   </div>
 
@@ -215,7 +250,9 @@ export default async function CompaniesPage() {
                     }}
                   >
                     <strong>Notes:</strong>
-                    <p style={{ margin: "6px 0 0" }}>{c.notes || "No notes added."}</p>
+                    <p style={{ margin: "6px 0 0" }}>
+                      {c.notes || "No notes added."}
+                    </p>
                   </div>
 
                   {c.application_id ? (
